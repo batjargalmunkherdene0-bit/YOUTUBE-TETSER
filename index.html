@@ -156,18 +156,84 @@ const COUNTRIES = {
   CA:"🇨🇦 Canada", RU:"🇷🇺 Russia"
 };
 const CATEGORIES = ["Music","Gaming","Entertainment","Film & Animation","News & Politics"];
-const INSIGHTS = {
-  US:{ Music:{avgViews:4200000,avgLikes:95000,engRate:"2.3%",avgTitleLen:42,patterns:["Official Video","ft.","Lyrics","Audio"]}, Gaming:{avgViews:1800000,avgLikes:62000,engRate:"3.4%",avgTitleLen:55,patterns:["gameplay","challenge","vs","#shorts"]}, Entertainment:{avgViews:2100000,avgLikes:71000,engRate:"3.1%",avgTitleLen:48,patterns:["reaction","explained","caught on camera","you won't believe"]}, "Film & Animation":{avgViews:3400000,avgLikes:88000,engRate:"2.6%",avgTitleLen:38,patterns:["Official Trailer","Teaser","Clip","2026"]}, "News & Politics":{avgViews:980000,avgLikes:28000,engRate:"2.8%",avgTitleLen:61,patterns:["breaking","2026","responds","live"]} },
-  GB:{ Music:{avgViews:2800000,avgLikes:71000,engRate:"2.5%",avgTitleLen:40,patterns:["Official Video","ft.","UK","Drill"]}, Gaming:{avgViews:1200000,avgLikes:48000,engRate:"4.0%",avgTitleLen:50,patterns:["gameplay","let's play","highlights","clips"]}, Entertainment:{avgViews:1600000,avgLikes:54000,engRate:"3.4%",avgTitleLen:52,patterns:["reaction","vs","challenge","BBC"]}, "Film & Animation":{avgViews:2900000,avgLikes:76000,engRate:"2.6%",avgTitleLen:36,patterns:["Official Trailer","Review","2026","Exclusive"]}, "News & Politics":{avgViews:820000,avgLikes:19000,engRate:"2.3%",avgTitleLen:65,patterns:["UK","Parliament","Budget","latest"]} },
-  KR:{ Music:{avgViews:8900000,avgLikes:310000,engRate:"3.5%",avgTitleLen:35,patterns:["MV","Official","Performance Video","Feat."]}, Gaming:{avgViews:890000,avgLikes:41000,engRate:"4.6%",avgTitleLen:48,patterns:["gameplay","highlight","tier list","review"]}, Entertainment:{avgViews:3200000,avgLikes:120000,engRate:"3.7%",avgTitleLen:44,patterns:["ep.","full","reaction","variety"]}, "Film & Animation":{avgViews:2100000,avgLikes:87000,engRate:"4.1%",avgTitleLen:33,patterns:["Official Trailer","Teaser","Movie","Drama"]}, "News & Politics":{avgViews:540000,avgLikes:18000,engRate:"3.3%",avgTitleLen:55,patterns:["뉴스","live","breaking","2026"]} },
-  JP:{ Music:{avgViews:3100000,avgLikes:98000,engRate:"3.2%",avgTitleLen:38,patterns:["MV","Official","Live","Short Ver."]}, Gaming:{avgViews:760000,avgLikes:38000,engRate:"5.0%",avgTitleLen:52,patterns:["実況","gameplay","tier","highlights"]}, Entertainment:{avgViews:1400000,avgLikes:52000,engRate:"3.7%",avgTitleLen:46,patterns:["公式","shorts","reaction","variety"]}, "Film & Animation":{avgViews:1900000,avgLikes:74000,engRate:"3.9%",avgTitleLen:34,patterns:["予告","Trailer","Official","Anime"]}, "News & Politics":{avgViews:410000,avgLikes:14000,engRate:"3.4%",avgTitleLen:58,patterns:["速報","live","2026","最新"]} },
-  BR:{ Music:{avgViews:5600000,avgLikes:142000,engRate:"2.5%",avgTitleLen:45,patterns:["Clipe Oficial","feat.","funk","ao vivo"]}, Gaming:{avgViews:2100000,avgLikes:78000,engRate:"3.7%",avgTitleLen:58,patterns:["minecraft","roblox","gameplay","desafio"]}, Entertainment:{avgViews:3400000,avgLikes:98000,engRate:"2.9%",avgTitleLen:52,patterns:["reagindo","meme","react","ao vivo"]}, "Film & Animation":{avgViews:2800000,avgLikes:85000,engRate:"3.0%",avgTitleLen:40,patterns:["Dublado","Trailer Oficial","2026","Legendado"]}, "News & Politics":{avgViews:720000,avgLikes:22000,engRate:"3.0%",avgTitleLen:60,patterns:["ao vivo","urgente","Brasil","2026"]} },
-  IN:{ Music:{avgViews:12000000,avgLikes:280000,engRate:"2.3%",avgTitleLen:40,patterns:["Official Video","Full Song","Bollywood","New Song"]}, Gaming:{avgViews:1500000,avgLikes:58000,engRate:"3.9%",avgTitleLen:54,patterns:["BGMI","free fire","gameplay","highlights"]}, Entertainment:{avgViews:4100000,avgLikes:110000,engRate:"2.7%",avgTitleLen:55,patterns:["reaction","comedy","roast","explained"]}, "Film & Animation":{avgViews:6200000,avgLikes:160000,engRate:"2.6%",avgTitleLen:42,patterns:["Official Trailer","Teaser","2026","Hindi"]}, "News & Politics":{avgViews:1800000,avgLikes:41000,engRate:"2.3%",avgTitleLen:62,patterns:["live","breaking","India","2026"]} },
-  DE:{ Music:{avgViews:2100000,avgLikes:62000,engRate:"3.0%",avgTitleLen:38,patterns:["Official Video","feat.","prod.","lyrics"]}, Gaming:{avgViews:840000,avgLikes:36000,engRate:"4.3%",avgTitleLen:52,patterns:["gameplay","let's play","highlights","tipps"]}, Entertainment:{avgViews:980000,avgLikes:38000,engRate:"3.9%",avgTitleLen:50,patterns:["reaction","challenge","vs","prank"]}, "Film & Animation":{avgViews:1700000,avgLikes:55000,engRate:"3.2%",avgTitleLen:36,patterns:["Offizieller Trailer","2026","Review","Deutsch"]}, "News & Politics":{avgViews:560000,avgLikes:15000,engRate:"2.7%",avgTitleLen:63,patterns:["live","aktuell","2026","Nachrichten"]} },
-  FR:{ Music:{avgViews:2400000,avgLikes:68000,engRate:"2.8%",avgTitleLen:41,patterns:["Clip Officiel","feat.","live","lyrics"]}, Gaming:{avgViews:920000,avgLikes:39000,engRate:"4.2%",avgTitleLen:50,patterns:["gameplay","tuto","astuce","highlights"]}, Entertainment:{avgViews:1100000,avgLikes:42000,engRate:"3.8%",avgTitleLen:53,patterns:["reaction","test","vs","humour"]}, "Film & Animation":{avgViews:1900000,avgLikes:61000,engRate:"3.2%",avgTitleLen:37,patterns:["Bande Annonce","Trailer","2026","VF"]}, "News & Politics":{avgViews:490000,avgLikes:13000,engRate:"2.6%",avgTitleLen:64,patterns:["direct","breaking","France","2026"]} },
-  MX:{ Music:{avgViews:4800000,avgLikes:118000,engRate:"2.5%",avgTitleLen:44,patterns:["Video Oficial","feat.","corrido","en vivo"]}, Gaming:{avgViews:1300000,avgLikes:52000,engRate:"4.0%",avgTitleLen:56,patterns:["gameplay","minecraft","roblox","desafio"]}, Entertainment:{avgViews:2200000,avgLikes:72000,engRate:"3.3%",avgTitleLen:54,patterns:["reacción","meme","challenge","vs"]}, "Film & Animation":{avgViews:2500000,avgLikes:78000,engRate:"3.1%",avgTitleLen:39,patterns:["Tráiler Oficial","2026","Doblado","Subtitulado"]}, "News & Politics":{avgViews:640000,avgLikes:18000,engRate:"2.8%",avgTitleLen:61,patterns:["en vivo","urgente","México","2026"]} },
-  CA:{ Music:{avgViews:1900000,avgLikes:58000,engRate:"3.1%",avgTitleLen:41,patterns:["Official Video","ft.","Audio","Lyrics"]}, Gaming:{avgViews:980000,avgLikes:40000,engRate:"4.1%",avgTitleLen:53,patterns:["gameplay","highlights","challenge","vs"]}, Entertainment:{avgViews:1100000,avgLikes:44000,engRate:"4.0%",avgTitleLen:50,patterns:["reaction","explained","ranked","challenged"]}, "Film & Animation":{avgViews:2100000,avgLikes:66000,engRate:"3.1%",avgTitleLen:37,patterns:["Official Trailer","2026","Review","Exclusive"]}, "News & Politics":{avgViews:580000,avgLikes:16000,engRate:"2.8%",avgTitleLen:62,patterns:["live","breaking","Canada","2026"]} },
-  RU:{ Music:{avgViews:3800000,avgLikes:96000,engRate:"2.5%",avgTitleLen:36,patterns:["Официальный клип","feat.","live","lyrics"]}, Gaming:{avgViews:1100000,avgLikes:47000,engRate:"4.3%",avgTitleLen:51,patterns:["gameplay","обзор","highlights","гайд"]}, Entertainment:{avgViews:1700000,avgLikes:61000,engRate:"3.6%",avgTitleLen:49,patterns:["реакция","vs","challenge","shorts"]}, "Film & Animation":{avgViews:2300000,avgLikes:72000,engRate:"3.1%",avgTitleLen:35,patterns:["Официальный трейлер","2026","Обзор","Русский"]}, "News & Politics":{avgViews:890000,avgLikes:24000,engRate:"2.7%",avgTitleLen:58,patterns:["прямой эфир","срочно","Россия","2026"]} },
+ const INSIGHTS = {
+  US:{
+    "Music":{"avgViews":152109,"avgLikes":3304,"engRate":"2.2%","avgTitleLen":46,"patterns":["Lyrics", "Official", "Audio", "live"]},
+    "Gaming":{"avgViews":584445,"avgLikes":15197,"engRate":"2.9%","avgTitleLen":43,"patterns":["live", "vs", "Official", "Trailer"]},
+    "Entertainment":{"avgViews":76827,"avgLikes":1527,"engRate":"2.2%","avgTitleLen":59,"patterns":["Trailer", "Official", "Official Trailer", "2026"]},
+    "Film & Animation":{"avgViews":82187,"avgLikes":2217,"engRate":"3.1%","avgTitleLen":56,"patterns":["Official", "Trailer", "Official Trailer", "#shorts"]},
+    "News & Politics":{"avgViews":242959,"avgLikes":6010,"engRate":"4.4%","avgTitleLen":62,"patterns":["reaction", "live", "2026", "#shorts"]}
+  },
+  BR:{
+    "Music":{"avgViews":59384,"avgLikes":1127,"engRate":"1.6%","avgTitleLen":48,"patterns":["Lyrics", "#shorts", "2026", "live"]},
+    "Gaming":{"avgViews":324770,"avgLikes":10204,"engRate":"2.9%","avgTitleLen":53,"patterns":["gameplay", "Trailer", "Official", "vs"]},
+    "Entertainment":{"avgViews":67332,"avgLikes":4607,"engRate":"6.9%","avgTitleLen":54,"patterns":["Trailer", "#shorts", "gameplay", "challenge"]},
+    "Film & Animation":{"avgViews":28817,"avgLikes":830,"engRate":"3.4%","avgTitleLen":49,"patterns":["Trailer", "2026", "live", "#shorts"]},
+    "News & Politics":{"avgViews":102737,"avgLikes":6816,"engRate":"5.9%","avgTitleLen":80,"patterns":["2026", "#shorts"]}
+  },
+  CA:{
+    "Music":{"avgViews":165119,"avgLikes":4900,"engRate":"1.9%","avgTitleLen":52,"patterns":["Official", "#shorts", "Lyrics", "Audio"]},
+    "Gaming":{"avgViews":630458,"avgLikes":17043,"engRate":"2.7%","avgTitleLen":47,"patterns":["live", "Official", "Trailer", "vs"]},
+    "Entertainment":{"avgViews":131367,"avgLikes":2400,"engRate":"2.2%","avgTitleLen":62,"patterns":["Trailer", "Official", "Official Trailer", "2026"]},
+    "Film & Animation":{"avgViews":119770,"avgLikes":1432,"engRate":"1.6%","avgTitleLen":53,"patterns":["2026", "Official", "Trailer", "Official Trailer"]},
+    "News & Politics":{"avgViews":286519,"avgLikes":7864,"engRate":"2.8%","avgTitleLen":65,"patterns":["2026", "live", "#shorts", "breaking"]}
+  },
+  DE:{
+    "Music":{"avgViews":161225,"avgLikes":2373,"engRate":"1.5%","avgTitleLen":51,"patterns":["Lyrics", "Audio", "Official", "live"]},
+    "Gaming":{"avgViews":173207,"avgLikes":5100,"engRate":"3.1%","avgTitleLen":53,"patterns":["vs", "challenge", "live", "#shorts"]},
+    "Entertainment":{"avgViews":167496,"avgLikes":3738,"engRate":"2.3%","avgTitleLen":49,"patterns":["Trailer", "2026", "Official", "Official Trailer"]},
+    "Film & Animation":{"avgViews":54672,"avgLikes":1702,"engRate":"3.0%","avgTitleLen":56,"patterns":["Official", "Trailer", "Official Trailer", "vs"]},
+    "News & Politics":{"avgViews":216249,"avgLikes":7086,"engRate":"3.3%","avgTitleLen":72,"patterns":["2026", "live", "breaking", "reaction"]}
+  },
+  FR:{
+    "Music":{"avgViews":88825,"avgLikes":898,"engRate":"1.4%","avgTitleLen":41,"patterns":["Lyrics", "Official", "ft.", "live"]},
+    "Gaming":{"avgViews":232262,"avgLikes":6772,"engRate":"2.8%","avgTitleLen":55,"patterns":["Trailer", "vs", "Official", "ft."]},
+    "Entertainment":{"avgViews":258965,"avgLikes":10968,"engRate":"4.3%","avgTitleLen":62,"patterns":["2026", "#shorts", "live", "Official"]},
+    "Film & Animation":{"avgViews":28712,"avgLikes":312,"engRate":"1.3%","avgTitleLen":55,"patterns":["2026", "Official", "ft.", "live"]},
+    "News & Politics":{"avgViews":89741,"avgLikes":3886,"engRate":"4.0%","avgTitleLen":73,"patterns":["2026", "#shorts"]}
+  },
+  GB:{
+    "Music":{"avgViews":59469,"avgLikes":476,"engRate":"1.2%","avgTitleLen":51,"patterns":["Lyrics", "#shorts", "Audio", "Official"]},
+    "Gaming":{"avgViews":412223,"avgLikes":11334,"engRate":"2.4%","avgTitleLen":48,"patterns":["gameplay", "live", "Official", "Trailer"]},
+    "Entertainment":{"avgViews":109794,"avgLikes":1949,"engRate":"2.3%","avgTitleLen":57,"patterns":["Trailer", "Official", "Official Trailer", "2026"]},
+    "Film & Animation":{"avgViews":22452,"avgLikes":252,"engRate":"1.6%","avgTitleLen":53,"patterns":["Trailer", "Official", "Official Trailer", "#shorts"]},
+    "News & Politics":{"avgViews":285956,"avgLikes":10721,"engRate":"3.5%","avgTitleLen":68,"patterns":["live", "2026", "#shorts", "breaking"]}
+  },
+  IN:{
+    "Music":{"avgViews":35140,"avgLikes":354,"engRate":"1.2%","avgTitleLen":94,"patterns":["#shorts", "Audio", "2026", "Official"]},
+    "Gaming":{"avgViews":739853,"avgLikes":19700,"engRate":"2.8%","avgTitleLen":50,"patterns":["live", "ft.", "#shorts", "vs"]},
+    "Entertainment":{"avgViews":301052,"avgLikes":7111,"engRate":"2.6%","avgTitleLen":77,"patterns":["#shorts", "2026", "vs", "Trailer"]},
+    "Film & Animation":{"avgViews":236799,"avgLikes":5477,"engRate":"2.0%","avgTitleLen":90,"patterns":["Official", "Trailer", "Official Trailer", "#shorts"]},
+    "News & Politics":{"avgViews":248220,"avgLikes":4002,"engRate":"1.6%","avgTitleLen":82,"patterns":["#shorts", "vs", "2026", "live"]}
+  },
+  JP:{
+    "Music":{"avgViews":585910,"avgLikes":28906,"engRate":"5.4%","avgTitleLen":44,"patterns":["Official", "#shorts", "live", "feat."]},
+    "Gaming":{"avgViews":199175,"avgLikes":3140,"engRate":"1.5%","avgTitleLen":40,"patterns":["#shorts", "vs", "Trailer", "live"]},
+    "Entertainment":{"avgViews":212205,"avgLikes":7711,"engRate":"3.5%","avgTitleLen":44,"patterns":["MV", "#shorts", "2026", "live"]},
+    "Film & Animation":{"avgViews":878413,"avgLikes":24963,"engRate":"3.0%","avgTitleLen":35,"patterns":["#shorts", "anime", "2026", "Trailer"]},
+    "News & Politics":{"avgViews":154062,"avgLikes":3068,"engRate":"2.1%","avgTitleLen":50,"patterns":["2026", "#shorts", "vs"]}
+  },
+  KR:{
+    "Music":{"avgViews":128588,"avgLikes":2761,"engRate":"1.7%","avgTitleLen":32,"patterns":["MV", "feat.", "live", "Official"]},
+    "Gaming":{"avgViews":209275,"avgLikes":1681,"engRate":"0.8%","avgTitleLen":26,"patterns":["live", "ft.", "vs", "2026"]},
+    "Entertainment":{"avgViews":49503,"avgLikes":1049,"engRate":"2.2%","avgTitleLen":49,"patterns":["MV", "feat.", "#shorts", "vs"]},
+    "Film & Animation":{"avgViews":304845,"avgLikes":3904,"engRate":"1.3%","avgTitleLen":37,"patterns":["vs", "#shorts", "live"]},
+    "News & Politics":{"avgViews":176834,"avgLikes":7047,"engRate":"2.7%","avgTitleLen":45,"patterns":["#shorts", "2026", "live", "vs"]}
+  },
+  MX:{
+    "Music":{"avgViews":163541,"avgLikes":1180,"engRate":"1.4%","avgTitleLen":48,"patterns":["Lyrics", "Official", "live", "ft."]},
+    "Gaming":{"avgViews":1322224,"avgLikes":16423,"engRate":"1.6%","avgTitleLen":51,"patterns":["Trailer", "vs", "Official", "ft."]},
+    "Entertainment":{"avgViews":505773,"avgLikes":5330,"engRate":"2.5%","avgTitleLen":44,"patterns":["#shorts", "vs", "2026", "Official"]},
+    "Film & Animation":{"avgViews":23519,"avgLikes":1098,"engRate":"4.3%","avgTitleLen":60,"patterns":["2026", "Trailer", "Official", "ft."]},
+    "News & Politics":{"avgViews":265199,"avgLikes":7581,"engRate":"2.5%","avgTitleLen":77,"patterns":["2026", "vs", "#shorts", "MV"]}
+  },
+  RU:{
+    "Music":{"avgViews":542097,"avgLikes":19898,"engRate":"2.1%","avgTitleLen":39,"patterns":["Official", "feat.", "Music Video", "live"]},
+    "Gaming":{"avgViews":316600,"avgLikes":10422,"engRate":"3.6%","avgTitleLen":59,"patterns":["#shorts", "vs", "ft.", "Official"]},
+    "Entertainment":{"avgViews":1352634,"avgLikes":61945,"engRate":"4.5%","avgTitleLen":45,"patterns":["#shorts", "vs", "2026", "reaction"]},
+    "Film & Animation":{"avgViews":47136,"avgLikes":1035,"engRate":"2.1%","avgTitleLen":59,"patterns":["2026", "#shorts", "ft.", "Official Trailer"]},
+    "News & Politics":{"avgViews":254523,"avgLikes":6567,"engRate":"3.0%","avgTitleLen":66,"patterns":["2026", "#shorts", "vs"]}
+  }
 };
 
 let selectedCountry = "US";
