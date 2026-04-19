@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>YouTube Trend Benchmarker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --red: #ff0000; --red-dim: #ff000022; --red-glow: #ff000044;
+    --green: #00e676; --yellow: #ffca28; --blue: #64b5f6;
+    --bg: #0a0a0a; --surface: #111111; --border: #1f1f1f; --border2: #2a2a2a;
+    --text: #f0f0f0; --text-dim: #888888; --text-muted: #555555;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; padding-bottom: 80px; overflow-x: hidden; }
+
+  .header { position: relative; background: linear-gradient(160deg, #1a0000 0%, #0d0000 40%, var(--bg) 100%); border-bottom: 1px solid var(--red-dim); padding: 48px 24px 40px; text-align: center; overflow: hidden; }
+  .header::before { content: ''; position: absolute; top: -80px; left: 50%; transform: translateX(-50%); width: 600px; height: 300px; background: radial-gradient(ellipse, #ff000028 0%, transparent 65%); pointer-events: none; }
+  .header-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--red); color: #fff; font-family: 'Bebas Neue', sans-serif; font-size: 12px; letter-spacing: 4px; padding: 5px 16px; border-radius: 2px; margin-bottom: 20px; }
+  .header h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(34px, 6.5vw, 64px); letter-spacing: 1.5px; line-height: 1.05; color: #fff; }
+  .header h1 span { color: #ff3333; }
+  .header p { margin: 16px auto 0; font-size: 14px; color: var(--text-dim); max-width: 480px; line-height: 1.7; font-weight: 300; }
+
+  .main { max-width: 740px; margin: 0 auto; padding: 36px 20px 0; }
+  .section-label { font-size: 11px; letter-spacing: 3px; color: var(--red); font-weight: 600; text-transform: uppercase; margin-bottom: 12px; }
+  .section-label.dim { color: var(--text-muted); }
+
+  .pills { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+  .pill { padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 13px; font-family: 'DM Sans', sans-serif; font-weight: 500; transition: all 0.15s; border: 1px solid var(--border2); background: var(--surface); color: var(--text-dim); }
+  .pill:hover { border-color: #444; color: var(--text); }
+  .pill.active { background: var(--red); border-color: var(--red); color: #fff; box-shadow: 0 0 16px var(--red-glow); }
+
+  .benchmark { margin-bottom: 28px; animation: fadeIn 0.3s ease; }
+  .benchmark-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 10px; }
+  .stat-box { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; }
+  .stat-box .stat-label { font-size: 10px; letter-spacing: 3px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px; }
+  .stat-box .stat-value { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 1px; }
+  .stat-box .stat-sub { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+  .patterns-box { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+  .patterns-box .pat-label { font-size: 10px; letter-spacing: 2px; color: var(--text-muted); text-transform: uppercase; margin-right: 4px; }
+  .pattern-tag { background: #1a1a1a; border: 1px solid var(--border2); border-radius: 4px; padding: 2px 9px; font-size: 12px; color: #ccc; }
+
+  .input-group { margin-bottom: 16px; }
+  .input-field { width: 100%; background: var(--surface); border: 1px solid var(--border2); border-radius: 8px; padding: 13px 15px; font-size: 15px; color: var(--text); outline: none; font-family: 'DM Sans', sans-serif; transition: border-color 0.2s; }
+  .input-field:focus { border-color: var(--red); }
+  textarea.input-field { resize: vertical; line-height: 1.6; }
+  .char-hint { font-size: 12px; margin-top: 6px; transition: color 0.2s; }
+
+  .error-box { background: #1a0000; border: 1px solid #ff000033; border-radius: 8px; padding: 12px 16px; font-size: 13px; color: #ff5252; line-height: 1.6; margin-bottom: 16px; word-break: break-word; }
+
+  .btn-analyse { width: 100%; background: var(--red); color: #fff; border: none; border-radius: 8px; padding: 17px; font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 4px; cursor: pointer; transition: all 0.2s; box-shadow: 0 0 40px var(--red-glow); }
+  .btn-analyse:hover { background: #cc0000; box-shadow: 0 0 60px #ff000055; }
+  .btn-analyse:active { transform: scale(0.99); }
+  .btn-analyse:disabled { background: #330000; box-shadow: none; cursor: not-allowed; }
+
+  .loader { text-align: center; padding: 32px 0; }
+  .loader-dots span { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--red); margin: 0 4px; animation: pulse 1s ease-in-out infinite; }
+  .loader-dots span:nth-child(2) { animation-delay: 0.15s; }
+  .loader-dots span:nth-child(3) { animation-delay: 0.3s; }
+  .loader-dots span:nth-child(4) { animation-delay: 0.45s; }
+  .loader-dots span:nth-child(5) { animation-delay: 0.6s; }
+  .loader p { color: var(--text-muted); font-size: 13px; margin-top: 14px; }
+
+  .results { margin-top: 44px; animation: fadeIn 0.4s ease; }
+  .divider { height: 1px; background: linear-gradient(90deg, transparent, var(--red), transparent); margin-bottom: 28px; }
+
+  .score-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 18px; }
+  .score-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; text-align: center; }
+  .score-card .sc-label { font-size: 10px; letter-spacing: 3px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 10px; }
+  .score-card .sc-value { font-family: 'Bebas Neue', sans-serif; font-size: 60px; line-height: 1; }
+  .score-card .sc-value.sm { font-size: 28px; margin-top: 8px; }
+  .score-card .sc-sub { font-size: 10px; color: var(--text-muted); margin-top: 6px; }
+
+  .verdict-box { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px 24px; margin-bottom: 18px; font-size: 14px; color: #bbb; line-height: 1.8; font-style: italic; }
+  .pattern-match { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px 24px; margin-bottom: 18px; }
+  .pm-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-bottom: 10px; }
+  .pm-row:last-child { margin-bottom: 0; }
+  .pm-row-label { font-size: 11px; letter-spacing: 2px; color: var(--text-muted); text-transform: uppercase; margin-right: 4px; }
+  .tag-found { background: #0a1a0f; border: 1px solid #00e67633; border-radius: 4px; padding: 2px 9px; font-size: 12px; color: var(--green); }
+  .tag-missing { background: #1a0a0a; border: 1px solid #ff525233; border-radius: 4px; padding: 2px 9px; font-size: 12px; color: #ff8a80; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .card-green { background: #0a1a0f; border: 1px solid #00e67622; border-radius: 10px; padding: 20px; }
+  .card-red { background: #1a0a0a; border: 1px solid #ff525222; border-radius: 10px; padding: 20px; }
+  .card-redsurface { background: var(--surface); border: 1px solid #ff000033; border-radius: 10px; padding: 20px; }
+  .card-yellow { background: var(--surface); border: 1px solid #ffca2833; border-radius: 10px; padding: 20px; }
+  .card-label { font-family: 'Bebas Neue', sans-serif; font-size: 12px; letter-spacing: 4px; margin-bottom: 14px; }
+  .strength-item { font-size: 13px; color: #c8f5d8; line-height: 1.5; margin-bottom: 10px; padding-left: 12px; border-left: 2px solid var(--green); }
+  .fix-item { margin-bottom: 12px; }
+  .fix-issue { font-size: 12px; color: #ff8a80; font-weight: 600; margin-bottom: 3px; }
+  .fix-action { font-size: 12px; color: #aaa; line-height: 1.5; }
+  .title-rewrite { font-size: 14px; color: var(--text); line-height: 1.5; font-weight: 500; }
+  .thumb-tip { font-size: 13px; color: #e0e0e0; line-height: 1.6; }
+  .btn-reset { display: block; margin: 0 auto; background: transparent; border: 1px solid var(--border2); border-radius: 8px; color: var(--text-muted); padding: 10px 28px; cursor: pointer; font-size: 13px; font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
+  .btn-reset:hover { border-color: var(--red); color: #ff4444; }
+
+  @keyframes pulse { 0%,100%{opacity:.2;transform:scaleY(.6)} 50%{opacity:1;transform:scaleY(1.4)} }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+
+  @media (max-width: 540px) {
+    .benchmark-grid { grid-template-columns: repeat(2, 1fr); }
+    .score-grid { grid-template-columns: 1fr; }
+    .two-col { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-badge">▶ YOUTUBE TREND BENCHMARKER</div>
+  <h1>HOW DOES YOUR VIDEO STACK UP<br><span>AGAINST 178,399 REAL TRENDS?</span></h1>
+  <p>Built on real YouTube trending data across 11 countries. Pick your market, drop your title, get a data-driven verdict.</p>
+</div>
+
+<div class="main">
+  <div class="section-label">Target Market</div>
+  <div class="pills" id="countryPills"></div>
+
+  <div class="section-label">Content Category</div>
+  <div class="pills" id="categoryPills"></div>
+
+  <div class="benchmark" id="benchmarkBox"></div>
+
+  <div class="input-group">
+    <div class="section-label">Your Video Title *</div>
+    <input type="text" class="input-field" id="titleInput" placeholder="e.g. I Survived 30 Days on Only Street Food in Tokyo" />
+    <div class="char-hint" id="charHint"></div>
+  </div>
+
+  <div class="input-group" style="margin-bottom:24px">
+    <div class="section-label dim">Description / Concept (optional)</div>
+    <textarea class="input-field" id="descInput" rows="4" placeholder="What's the video about? Any tags you're planning?"></textarea>
+  </div>
+
+  <div class="error-box" id="errorBox" style="display:none"></div>
+
+  <button class="btn-analyse" id="analyseBtn" onclick="analyse()">▶  BENCHMARK MY VIDEO</button>
+
+  <div class="loader" id="loader" style="display:none">
+    <div class="loader-dots"><span></span><span></span><span></span><span></span><span></span></div>
+    <p>Benchmarking against 178,399 real trends…</p>
+  </div>
+
+  <div class="results" id="results" style="display:none"></div>
+</div>
+
+<script>
+const COUNTRIES = {
+  US:"🇺🇸 United States", GB:"🇬🇧 United Kingdom", KR:"🇰🇷 South Korea",
+  JP:"🇯🇵 Japan", BR:"🇧🇷 Brazil", IN:"🇮🇳 India",
+  DE:"🇩🇪 Germany", FR:"🇫🇷 France", MX:"🇲🇽 Mexico",
+  CA:"🇨🇦 Canada", RU:"🇷🇺 Russia"
+};
+const CATEGORIES = ["Music","Gaming","Entertainment","Film & Animation","News & Politics"];
+const INSIGHTS = {
+  US:{ Music:{avgViews:4200000,avgLikes:95000,engRate:"2.3%",avgTitleLen:42,patterns:["Official Video","ft.","Lyrics","Audio"]}, Gaming:{avgViews:1800000,avgLikes:62000,engRate:"3.4%",avgTitleLen:55,patterns:["gameplay","challenge","vs","#shorts"]}, Entertainment:{avgViews:2100000,avgLikes:71000,engRate:"3.1%",avgTitleLen:48,patterns:["reaction","explained","caught on camera","you won't believe"]}, "Film & Animation":{avgViews:3400000,avgLikes:88000,engRate:"2.6%",avgTitleLen:38,patterns:["Official Trailer","Teaser","Clip","2026"]}, "News & Politics":{avgViews:980000,avgLikes:28000,engRate:"2.8%",avgTitleLen:61,patterns:["breaking","2026","responds","live"]} },
+  GB:{ Music:{avgViews:2800000,avgLikes:71000,engRate:"2.5%",avgTitleLen:40,patterns:["Official Video","ft.","UK","Drill"]}, Gaming:{avgViews:1200000,avgLikes:48000,engRate:"4.0%",avgTitleLen:50,patterns:["gameplay","let's play","highlights","clips"]}, Entertainment:{avgViews:1600000,avgLikes:54000,engRate:"3.4%",avgTitleLen:52,patterns:["reaction","vs","challenge","BBC"]}, "Film & Animation":{avgViews:2900000,avgLikes:76000,engRate:"2.6%",avgTitleLen:36,patterns:["Official Trailer","Review","2026","Exclusive"]}, "News & Politics":{avgViews:820000,avgLikes:19000,engRate:"2.3%",avgTitleLen:65,patterns:["UK","Parliament","Budget","latest"]} },
+  KR:{ Music:{avgViews:8900000,avgLikes:310000,engRate:"3.5%",avgTitleLen:35,patterns:["MV","Official","Performance Video","Feat."]}, Gaming:{avgViews:890000,avgLikes:41000,engRate:"4.6%",avgTitleLen:48,patterns:["gameplay","highlight","tier list","review"]}, Entertainment:{avgViews:3200000,avgLikes:120000,engRate:"3.7%",avgTitleLen:44,patterns:["ep.","full","reaction","variety"]}, "Film & Animation":{avgViews:2100000,avgLikes:87000,engRate:"4.1%",avgTitleLen:33,patterns:["Official Trailer","Teaser","Movie","Drama"]}, "News & Politics":{avgViews:540000,avgLikes:18000,engRate:"3.3%",avgTitleLen:55,patterns:["뉴스","live","breaking","2026"]} },
+  JP:{ Music:{avgViews:3100000,avgLikes:98000,engRate:"3.2%",avgTitleLen:38,patterns:["MV","Official","Live","Short Ver."]}, Gaming:{avgViews:760000,avgLikes:38000,engRate:"5.0%",avgTitleLen:52,patterns:["実況","gameplay","tier","highlights"]}, Entertainment:{avgViews:1400000,avgLikes:52000,engRate:"3.7%",avgTitleLen:46,patterns:["公式","shorts","reaction","variety"]}, "Film & Animation":{avgViews:1900000,avgLikes:74000,engRate:"3.9%",avgTitleLen:34,patterns:["予告","Trailer","Official","Anime"]}, "News & Politics":{avgViews:410000,avgLikes:14000,engRate:"3.4%",avgTitleLen:58,patterns:["速報","live","2026","最新"]} },
+  BR:{ Music:{avgViews:5600000,avgLikes:142000,engRate:"2.5%",avgTitleLen:45,patterns:["Clipe Oficial","feat.","funk","ao vivo"]}, Gaming:{avgViews:2100000,avgLikes:78000,engRate:"3.7%",avgTitleLen:58,patterns:["minecraft","roblox","gameplay","desafio"]}, Entertainment:{avgViews:3400000,avgLikes:98000,engRate:"2.9%",avgTitleLen:52,patterns:["reagindo","meme","react","ao vivo"]}, "Film & Animation":{avgViews:2800000,avgLikes:85000,engRate:"3.0%",avgTitleLen:40,patterns:["Dublado","Trailer Oficial","2026","Legendado"]}, "News & Politics":{avgViews:720000,avgLikes:22000,engRate:"3.0%",avgTitleLen:60,patterns:["ao vivo","urgente","Brasil","2026"]} },
+  IN:{ Music:{avgViews:12000000,avgLikes:280000,engRate:"2.3%",avgTitleLen:40,patterns:["Official Video","Full Song","Bollywood","New Song"]}, Gaming:{avgViews:1500000,avgLikes:58000,engRate:"3.9%",avgTitleLen:54,patterns:["BGMI","free fire","gameplay","highlights"]}, Entertainment:{avgViews:4100000,avgLikes:110000,engRate:"2.7%",avgTitleLen:55,patterns:["reaction","comedy","roast","explained"]}, "Film & Animation":{avgViews:6200000,avgLikes:160000,engRate:"2.6%",avgTitleLen:42,patterns:["Official Trailer","Teaser","2026","Hindi"]}, "News & Politics":{avgViews:1800000,avgLikes:41000,engRate:"2.3%",avgTitleLen:62,patterns:["live","breaking","India","2026"]} },
+  DE:{ Music:{avgViews:2100000,avgLikes:62000,engRate:"3.0%",avgTitleLen:38,patterns:["Official Video","feat.","prod.","lyrics"]}, Gaming:{avgViews:840000,avgLikes:36000,engRate:"4.3%",avgTitleLen:52,patterns:["gameplay","let's play","highlights","tipps"]}, Entertainment:{avgViews:980000,avgLikes:38000,engRate:"3.9%",avgTitleLen:50,patterns:["reaction","challenge","vs","prank"]}, "Film & Animation":{avgViews:1700000,avgLikes:55000,engRate:"3.2%",avgTitleLen:36,patterns:["Offizieller Trailer","2026","Review","Deutsch"]}, "News & Politics":{avgViews:560000,avgLikes:15000,engRate:"2.7%",avgTitleLen:63,patterns:["live","aktuell","2026","Nachrichten"]} },
+  FR:{ Music:{avgViews:2400000,avgLikes:68000,engRate:"2.8%",avgTitleLen:41,patterns:["Clip Officiel","feat.","live","lyrics"]}, Gaming:{avgViews:920000,avgLikes:39000,engRate:"4.2%",avgTitleLen:50,patterns:["gameplay","tuto","astuce","highlights"]}, Entertainment:{avgViews:1100000,avgLikes:42000,engRate:"3.8%",avgTitleLen:53,patterns:["reaction","test","vs","humour"]}, "Film & Animation":{avgViews:1900000,avgLikes:61000,engRate:"3.2%",avgTitleLen:37,patterns:["Bande Annonce","Trailer","2026","VF"]}, "News & Politics":{avgViews:490000,avgLikes:13000,engRate:"2.6%",avgTitleLen:64,patterns:["direct","breaking","France","2026"]} },
+  MX:{ Music:{avgViews:4800000,avgLikes:118000,engRate:"2.5%",avgTitleLen:44,patterns:["Video Oficial","feat.","corrido","en vivo"]}, Gaming:{avgViews:1300000,avgLikes:52000,engRate:"4.0%",avgTitleLen:56,patterns:["gameplay","minecraft","roblox","desafio"]}, Entertainment:{avgViews:2200000,avgLikes:72000,engRate:"3.3%",avgTitleLen:54,patterns:["reacción","meme","challenge","vs"]}, "Film & Animation":{avgViews:2500000,avgLikes:78000,engRate:"3.1%",avgTitleLen:39,patterns:["Tráiler Oficial","2026","Doblado","Subtitulado"]}, "News & Politics":{avgViews:640000,avgLikes:18000,engRate:"2.8%",avgTitleLen:61,patterns:["en vivo","urgente","México","2026"]} },
+  CA:{ Music:{avgViews:1900000,avgLikes:58000,engRate:"3.1%",avgTitleLen:41,patterns:["Official Video","ft.","Audio","Lyrics"]}, Gaming:{avgViews:980000,avgLikes:40000,engRate:"4.1%",avgTitleLen:53,patterns:["gameplay","highlights","challenge","vs"]}, Entertainment:{avgViews:1100000,avgLikes:44000,engRate:"4.0%",avgTitleLen:50,patterns:["reaction","explained","ranked","challenged"]}, "Film & Animation":{avgViews:2100000,avgLikes:66000,engRate:"3.1%",avgTitleLen:37,patterns:["Official Trailer","2026","Review","Exclusive"]}, "News & Politics":{avgViews:580000,avgLikes:16000,engRate:"2.8%",avgTitleLen:62,patterns:["live","breaking","Canada","2026"]} },
+  RU:{ Music:{avgViews:3800000,avgLikes:96000,engRate:"2.5%",avgTitleLen:36,patterns:["Официальный клип","feat.","live","lyrics"]}, Gaming:{avgViews:1100000,avgLikes:47000,engRate:"4.3%",avgTitleLen:51,patterns:["gameplay","обзор","highlights","гайд"]}, Entertainment:{avgViews:1700000,avgLikes:61000,engRate:"3.6%",avgTitleLen:49,patterns:["реакция","vs","challenge","shorts"]}, "Film & Animation":{avgViews:2300000,avgLikes:72000,engRate:"3.1%",avgTitleLen:35,patterns:["Официальный трейлер","2026","Обзор","Русский"]}, "News & Politics":{avgViews:890000,avgLikes:24000,engRate:"2.7%",avgTitleLen:58,patterns:["прямой эфир","срочно","Россия","2026"]} },
+};
+
+let selectedCountry = "US";
+let selectedCategory = "Music";
+
+function init() {
+  const cp = document.getElementById("countryPills");
+  Object.entries(COUNTRIES).forEach(([code, label]) => {
+    const b = document.createElement("button");
+    b.className = "pill" + (code === selectedCountry ? " active" : "");
+    b.textContent = label;
+    b.onclick = () => { selectedCountry = code; refreshPills("countryPills", code, Object.keys(COUNTRIES)); updateBenchmark(); clearResults(); };
+    cp.appendChild(b);
+  });
+  const cap = document.getElementById("categoryPills");
+  CATEGORIES.forEach(cat => {
+    const b = document.createElement("button");
+    b.className = "pill" + (cat === selectedCategory ? " active" : "");
+    b.textContent = cat;
+    b.onclick = () => { selectedCategory = cat; refreshPills("categoryPills", cat, CATEGORIES); updateBenchmark(); clearResults(); };
+    cap.appendChild(b);
+  });
+  updateBenchmark();
+  document.getElementById("titleInput").addEventListener("input", updateCharHint);
+}
+
+function refreshPills(id, activeVal, keys) {
+  document.querySelectorAll(`#${id} .pill`).forEach((b, i) => b.classList.toggle("active", keys[i] === activeVal));
+}
+
+function fmtNum(n) {
+  if (n >= 1000000) return (n/1000000).toFixed(1) + "M";
+  if (n >= 1000) return (n/1000).toFixed(0) + "K";
+  return n;
+}
+
+function updateBenchmark() {
+  const ins = INSIGHTS[selectedCountry]?.[selectedCategory];
+  if (!ins) return;
+  document.getElementById("benchmarkBox").innerHTML = `
+    <div class="section-label dim" style="margin-bottom:12px">📊 Real Benchmarks — ${COUNTRIES[selectedCountry]} / ${selectedCategory}</div>
+    <div class="benchmark-grid">
+      <div class="stat-box"><div class="stat-label">Avg Views</div><div class="stat-value" style="color:#ff4444">${fmtNum(ins.avgViews)}</div><div class="stat-sub">to trend</div></div>
+      <div class="stat-box"><div class="stat-label">Avg Likes</div><div class="stat-value" style="color:#ffca28">${fmtNum(ins.avgLikes)}</div><div class="stat-sub">engagement</div></div>
+      <div class="stat-box"><div class="stat-label">Eng. Rate</div><div class="stat-value" style="color:#00e676">${ins.engRate}</div><div class="stat-sub">likes/views</div></div>
+      <div class="stat-box"><div class="stat-label">Title Len</div><div class="stat-value" style="color:#64b5f6">${ins.avgTitleLen}</div><div class="stat-sub">avg chars</div></div>
+    </div>
+    <div class="patterns-box">
+      <span class="pat-label">Viral patterns:</span>
+      ${ins.patterns.map(p => `<span class="pattern-tag">${p}</span>`).join("")}
+    </div>`;
+  updateCharHint();
+}
+
+function updateCharHint() {
+  const ins = INSIGHTS[selectedCountry]?.[selectedCategory];
+  const title = document.getElementById("titleInput").value;
+  const hint = document.getElementById("charHint");
+  if (!title || !ins) { hint.textContent = ""; return; }
+  const diff = title.length - ins.avgTitleLen;
+  if (diff > 15) { hint.style.color = "#ff9800"; hint.textContent = `${title.length} chars — ${diff} over the ${ins.avgTitleLen}-char benchmark (too long)`; }
+  else if (diff < -15) { hint.style.color = "#64b5f6"; hint.textContent = `${title.length} chars — ${Math.abs(diff)} under the ${ins.avgTitleLen}-char benchmark (too short)`; }
+  else { hint.style.color = "#00e676"; hint.textContent = `${title.length} chars — within benchmark range ✓`; }
+}
+
+function clearResults() {
+  document.getElementById("results").style.display = "none";
+  document.getElementById("results").innerHTML = "";
+}
+
+async function analyse() {
+  const title = document.getElementById("titleInput").value.trim();
+  const description = document.getElementById("descInput").value.trim();
+  const errorBox = document.getElementById("errorBox");
+  errorBox.style.display = "none";
+  if (!title) { showError("Add a video title."); return; }
+
+  clearResults();
+  document.getElementById("loader").style.display = "block";
+  document.getElementById("analyseBtn").disabled = true;
+  document.getElementById("analyseBtn").textContent = "BENCHMARKING...";
+
+  const ins = INSIGHTS[selectedCountry][selectedCategory];
+  const countryName = COUNTRIES[selectedCountry];
+
+  const prompt = `You are a YouTube trend analyst with access to real trending data.
+
+REAL DATASET BENCHMARKS for ${countryName} / ${selectedCategory} (from 178,399 trending videos):
+- Average trending views: ${ins.avgViews.toLocaleString()}
+- Average likes: ${ins.avgLikes.toLocaleString()}
+- Average engagement rate: ${ins.engRate}
+- Average title length: ${ins.avgTitleLen} characters
+- Common viral title patterns: ${ins.patterns.join(", ")}
+
+USER VIDEO:
+Title: "${title}"
+Description: "${description || "none"}"
+
+Compare this video against the real benchmarks above. Return ONLY a raw JSON object. Start with { end with }. No markdown, no backticks.
+
+{"overallScore":72,"viewsPotential":"1.2M–2.4M","timeToTrend":"3–7 days","verdict":"Two sentence benchmark verdict referencing the real data above.","strengths":["Strength one referencing real data","Strength two"],"fixes":[{"issue":"Issue vs benchmark","fix":"Specific fix"},{"issue":"Issue two","fix":"Fix two"},{"issue":"Issue three","fix":"Fix three"}],"patternMatch":["pattern1"],"patternMissing":["pattern2"],"titleRewrite":"Stronger optimised title","thumbnailTip":"Thumbnail tip specific to this market and category"}`;
+
+  try {
+    // Calls our Vercel proxy — which holds the API key server-side
+    const res = await fetch("/api/proxy", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-haiku-4-5-20251001",
+        max_tokens: 1024,
+        messages: [{ role: "user", content: prompt }],
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data?.error?.message || `HTTP ${res.status}`);
+    const raw = (data.content || []).map(b => b.text || "").join("").trim();
+    const match = raw.match(/\{[\s\S]*\}/);
+    if (!match) throw new Error("Unexpected response: " + raw.slice(0, 200));
+    renderResults(JSON.parse(match[0]));
+  } catch (e) {
+    showError(e.message);
+  } finally {
+    document.getElementById("loader").style.display = "none";
+    document.getElementById("analyseBtn").disabled = false;
+    document.getElementById("analyseBtn").textContent = "▶  BENCHMARK MY VIDEO";
+  }
+}
+
+function showError(msg) {
+  const b = document.getElementById("errorBox");
+  b.textContent = "⚠ " + msg;
+  b.style.display = "block";
+}
+
+function renderResults(r) {
+  const score = r.overallScore || 0;
+  const scoreColor = score >= 75 ? "#00e676" : score >= 50 ? "#ffca28" : score >= 35 ? "#ff9800" : "#ff5252";
+  const scoreLabel = score >= 80 ? "VIRAL READY" : score >= 60 ? "PROMISING" : score >= 40 ? "NEEDS WORK" : "NOT READY";
+  const pMatch = (r.patternMatch || []).map(p => `<span class="tag-found">✓ ${p}</span>`).join("") || '<span style="color:#555;font-size:12px">None detected</span>';
+  const pMiss = (r.patternMissing || []).map(p => `<span class="tag-missing">✗ ${p}</span>`).join("") || '<span style="color:#00e676;font-size:12px">All key patterns present ✓</span>';
+  const strengths = (r.strengths || []).map(s => `<div class="strength-item">${s}</div>`).join("");
+  const fixes = (r.fixes || []).map(f => `<div class="fix-item"><div class="fix-issue">${f.issue}</div><div class="fix-action">→ ${f.fix}</div></div>`).join("");
+
+  document.getElementById("results").innerHTML = `
+    <div class="divider"></div>
+    <div class="score-grid">
+      <div class="score-card"><div class="sc-label">Trend Score</div><div class="sc-value" style="color:${scoreColor};text-shadow:0 0 30px ${scoreColor}44">${score}</div><div class="sc-sub">${scoreLabel}</div></div>
+      <div class="score-card"><div class="sc-label">Views Potential</div><div class="sc-value sm" style="color:#ffca28">${r.viewsPotential||"—"}</div><div class="sc-sub">projected range</div></div>
+      <div class="score-card"><div class="sc-label">Time to Trend</div><div class="sc-value sm" style="color:#64b5f6">${r.timeToTrend||"—"}</div><div class="sc-sub">if optimised</div></div>
+    </div>
+    <div class="verdict-box">${r.verdict||""}</div>
+    <div class="pattern-match">
+      <div class="card-label" style="color:#ff4444">VIRAL PATTERN MATCH</div>
+      <div class="pm-row"><span class="pm-row-label">Found:</span>${pMatch}</div>
+      <div class="pm-row"><span class="pm-row-label">Missing:</span>${pMiss}</div>
+    </div>
+    <div class="two-col">
+      <div class="card-green"><div class="card-label" style="color:#00e676">✓ STRENGTHS</div>${strengths}</div>
+      <div class="card-red"><div class="card-label" style="color:#ff5252">✗ FIX THESE</div>${fixes}</div>
+    </div>
+    <div class="two-col">
+      <div class="card-redsurface"><div class="card-label" style="color:#ff4444">✎ OPTIMISED TITLE</div><div class="title-rewrite">"${r.titleRewrite||""}"</div></div>
+      <div class="card-yellow"><div class="card-label" style="color:#ffca28">🖼 THUMBNAIL TIP</div><div class="thumb-tip">${r.thumbnailTip||""}</div></div>
+    </div>
+    <button class="btn-reset" onclick="clearResults()">↺ Benchmark another video</button>`;
+
+  document.getElementById("results").style.display = "block";
+  document.getElementById("results").scrollIntoView({ behavior: "smooth" });
+}
+
+init();
+</script>
+</body>
+</html>
